@@ -8,8 +8,27 @@ on:
   workflow_dispatch:
 
 jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - uses: leanprover/lean-action@v1-beta
+        with:
+          test: true
+          lint-module: "Evaluation"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: evaluation_function
+          path: ./lake/build/bin/evaluation
+
   deploy:
     uses: lambda-feedback/evaluation-function-workflows/.github/workflows/deploy.yml@main
+    needs: [test]
     with:
       template-repository-name: 'lambda-feedback/evaluation-function-boilerplate-lean'
     secrets:
