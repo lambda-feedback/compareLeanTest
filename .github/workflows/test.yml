@@ -1,0 +1,47 @@
+name: Test Lean Evaluation Function
+
+on:
+  workflow_call:
+    inputs:
+      lint-module:
+        type: string
+        description: "The module to lint"
+        required: false
+        default: ""
+      binary-name:
+        type: string
+        description: "The name of the binary"
+        required: false
+        default: "evaluation"
+    outputs:
+      lean-version:
+        description: "The version of Lean used to build the project"
+        value: ${{ jobs.test.outputs.lean-version }}
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    outputs:
+      lean-version: ${{ steps.lean_version.outputs.lean_version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup Lean, build, test, and lint
+        uses: leanprover/lean-action@v1-beta
+        with:
+          test: true
+          lint-module: ${{ inputs.lint-module }}
+
+      - name: Get Lean version
+        id: lean_version
+        run: |
+          lean_version=$(lean --version | awk -F '[, ]+' '{print $3}')
+          echo "lean_version=$lean_version" >> "$GITHUB_OUTPUT"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: evaluation_function
+          path: ./lake/build/bin/${{ inputs.binary-name }}
