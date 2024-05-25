@@ -10,7 +10,7 @@ on:
 jobs:
   test:
     name: Test
-    uses: ./.github/workflows/test.yml
+    uses: lambda-feedback/evaluation-function-workflows/.github/workflows/lean_test.yml@main
     with:
       lint-module: "Evaluation"
 

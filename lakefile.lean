@@ -17,6 +17,10 @@ lean_lib «Testing» where
 lean_exe «evaluation» where
   root := `Main
   srcDir := "./src"
+  -- `supportInterpreter` enables the use of the Lean interpreter
+  -- by the executable (e.g., `Lean.Elab.runFrontend`) at the expense
+  -- of increased binary size on Linux.
+  -- supportInterpreter := true
 
 @[test_runner]
 lean_exe «tests» where
