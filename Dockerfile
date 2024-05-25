@@ -1,4 +1,6 @@
-FROM ghcr.io/lambda-feedback/evaluation-function-base/lean:4.8.0-rc2 as build
+ARG LEAN_VERSION=4.8.0-rc2
+
+FROM ghcr.io/lambda-feedback/evaluation-function-base/lean:${LEAN_VERSION} as build
 
 RUN apt-get update && apt-get install -y \
     git \
